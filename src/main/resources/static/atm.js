@@ -44,7 +44,7 @@ $(function() {
 
 $(function() {
 	    $(".btn-primary1").on("click", function() {
-	    	amount = $("#deposit").val()
+	    	amount = $("#deposit2").val()
 	    	console.log(amount)
 //    	$.ajax({
 //    		url: "/bankTrading/deposit/" + accountId,
