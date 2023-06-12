@@ -2,9 +2,10 @@ package com.example.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.entity.Account;
@@ -23,82 +24,57 @@ public class AccountController {
         this.accountService = accountService;
     }
 
+
+    /**
+     * 課題1. 口座開設
+     *
+     * 新規口座を開設する
+     *
+     * @return Account 新規登録した口座情報
+     */
     @PostMapping("/open")
     public Account open() {
-    	return this.accountService.createAccount();
+        return accountService.createAccount();
     }
 
-
-//    URLから口座IDを取得する
-//
-//    取得した口座IDをもとに対象のデータを取得する
-//
-//    取得したデータの預金額をResponseAmountインスタンスにセットする
-//
-//    ResponseAmountインスタンスを返却する
+    /**
+     * 課題2. 残高照会
+     *
+     * 口座IDに紐づく残高を取得する
+     *
+     * @param accountId 口座ID
+     * @return ResponseAmount 残高のレスポンス
+     */
     @GetMapping("/{account_id}")
-    public ResponseAmount getAmount(@RequestParam("accunt_id") Integer accuntId) {
-    	Account acount = accountService.findById(accuntId).get();
-    	ResponseAmount resAmount = new ResponseAmount();
-    	resAmount.setAmount(acount.getAmount());
-    	return resAmount;
+    public ResponseAmount getAmount(@PathVariable("account_id") Integer accountId) {
+        return accountService.getResponseAmount(accountId);
     }
 
-
-
-//    URLから口座IDを取得する
-//
-//    取得した口座IDから対象口座を取得する
-//
-//    対象口座の残高に対して、リクエストされた金額を加算し更新する
-//
-//    更新後の預金額をResponseAmountインスタンスにセットする
-//
-//    ResponseAmountインスタンスを返却する
+    /**
+     * 課題3. 預け入れ
+     *
+     * 預金後の残高を返却する
+     *
+     * @param accountId 口座ID
+     * @param requestAmount 預金額
+     * @return ResponseAmount 残高のレスポンス
+     */
     @PostMapping("/deposit/{account_id}")
-    public ResponseAmount deposit(@RequestParam Integer accountId, RequestAmount requestAmount) {
-    	Account account = accountService.findById(accountId).get();
-    	account.setAmount(requestAmount.getAmount() + account.getAmount());
-    	accountService.update(account);
-    	ResponseAmount resAmount = new ResponseAmount();
-    	resAmount.setAmount(account.getAmount());
-    	return resAmount;
+    public ResponseAmount deposit(@PathVariable("account_id") Integer accountId, @RequestBody RequestAmount requestAmount) {
+        return accountService.depositAccount(accountId, requestAmount);
     }
 
-
-
-
-//    URLから口座IDを取得する
-//
-//    取得した口座IDから対象口座を取得する
-//
-//    リクエストされた金額が残高から引き出せる金額か確認する
-//
-//    残高が足りている場合
-//
-//    残高からリクエストされた金額を減算し更新する
-//
-//    残高が足りていない場合
-//
-//    減算処理は行わない
-//
-//    更新後の預金額をResponseAmountインスタンスにセットする
-//
-//    ResponseAmountインスタンスを返却する
+    /**
+     * 課題4. 引き出し
+     *
+     * 引出後の残高を返却する
+     *
+     * @param accountId 口座ID
+     * @param requestAmount 引出額
+     * @return ResponseAmount 残高のレスポンス
+     */
     @PostMapping("/withdraw/{account_id}")
-    public ResponseAmount withdraw(@RequestParam Integer accountId, RequestAmount requestAmount) {
-    	Account account = accountService.findById(accountId).get();
-    	if(requestAmount.getAmount() <= account.getAmount()) {
-    		account.setAmount(account.getAmount() - requestAmount.getAmount());
-    	}
-    	else {
-    		account.setAmount(account.getAmount());
-    	}
-
-    	accountService.update(account);
-    	ResponseAmount resAmount = new ResponseAmount();
-    	resAmount.setAmount(account.getAmount());
-    	return resAmount;
+    public ResponseAmount withdraw(@PathVariable("account_id") Integer accountId, @RequestBody RequestAmount requestAmount) {
+        return accountService.withdrawAccount(accountId, requestAmount);
     }
-
 }

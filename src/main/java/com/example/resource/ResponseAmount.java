@@ -4,6 +4,7 @@ public class ResponseAmount {
 
     private Integer amount;
 
+
     public Integer getAmount() {
         return this.amount;
     }
