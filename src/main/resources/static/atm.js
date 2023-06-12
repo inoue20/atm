@@ -44,15 +44,18 @@ $(function() {
 
 $(function() {
 	    $(".btn-primary1").on("click", function() {
-    	$.ajax({
-    		url: "/bankTrading/deposit/" + accountId,
-    		type: "POST",
-    		ContentType: "application/json",
-    		data: JSON.stringify(amount),
-    	})
-    	.done(function(response) {
-    		amount = response.requestAmount;
-    })
+	    	amount = $("#deposit").val()
+	    	console.log(amount)
+//    	$.ajax({
+//    		url: "/bankTrading/deposit/" + accountId,
+//    		type: "POST",
+//    		ContentType: "application/json",
+//    		data: amount,
+//    	})
+//    	.done(function(response) {
+//    		amount = response.requestAmount;
+//    })
+})
 })
 
 
